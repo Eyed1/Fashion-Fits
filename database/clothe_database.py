@@ -1,9 +1,9 @@
 import sqlite3
 
-def run_cmd(command, db_path):
+def run_cmd(db_path, command, params = ()):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute(command)
+    cursor.execute(command, params)
     conn.commit()
     cursor.close()
     conn.close()
@@ -18,11 +18,11 @@ def init_clothes(db_path):
     blue INTEGER,\
     length INTEGER\
     )"
-    run_cmd(cmd, db_path)
+    run_cmd(db_path, cmd)
 
 def delete_clothes(db_path):
     cmd = "DROP TABLE clothes"
-    run_cmd(cmd, db_path)
+    run_cmd(db_path, cmd)
 
 class clothe:
     #category = "casual inner", "casual outer", "formal shirt", "formal pant", "casual pant"
@@ -33,8 +33,12 @@ class clothe:
         self.blue = b
         self.length = length
 
-def add_clothes(db_path, clothe):
-    cmd = f"INSERT INTO clothes (type, red, green, blue, length)\
-            VALUES ({clothe.category}, ?, ?, ?, ?)"
+def add_clothes(db_path, clothes):
+    cmd = f"INSERT INTO clothes (type, red, green, blue, length) VALUES (?, ?, ?, ?, ?)"
+    print(cmd)
+    run_cmd(db_path, cmd, (clothes.category, clothes.red, clothes.green, clothes.blue, clothes.length))
 
+def add_inventory(db_path, inventory):
+    for clothe in inventory:
+        add_clothes(db_path, clothe)
 
