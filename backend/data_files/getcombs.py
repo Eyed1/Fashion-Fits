@@ -66,19 +66,19 @@ for comb in data:
 print("stage 2 read through files")
 
 for i in range(numsum2):
-    top_id = random.randint(0, len(inner_top))
-    pant_id = random.randint(0, len(pants))
-    datapoint = {"datapoint": [top_id, pant_id], "util": 0}
+    top_id = random.randint(0, len(inner_top)-1)
+    pant_id = random.randint(0, len(pants)-1)
+    datapoint = {"datapoint": [inner_top[top_id], pants[pant_id]], "util": 0}
     json.dump(datapoint, outfile)
     outfile.write("\n")
 
 print("stage 3 random size 2")
 
 for i in range(numsum3):
-    intop_id = random.randint(0, len(inner_top))
-    outtop_id = random.randint(0, len(outer_top))
-    pant_id = random.randint(0, len(pants))
-    datapoint = {"datapoint": [intop_id, outtop_id, pant_id], "util": 0}
+    intop_id = random.randint(0, len(inner_top)-1)
+    outtop_id = random.randint(0, len(outer_top)-1)
+    pant_id = random.randint(0, len(pants)-1)
+    datapoint = {"datapoint": [inner_top[intop_id], outer_top[outtop_id], pants[pant_id]], "util": 0}
     json.dump(datapoint, outfile)
     outfile.write("\n")
 
