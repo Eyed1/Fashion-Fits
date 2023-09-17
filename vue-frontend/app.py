@@ -51,7 +51,7 @@ def getFits():
 
 @app.route("/api/wardrope", methods=["GET"])
 def getWardrope():
-    return user.get_clothes(-1)
+    return jsonify(user.get_clothes(-1))
 
 if __name__ == '__main__':
     app.run(port=1934, debug=True)
