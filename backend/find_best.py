@@ -6,11 +6,29 @@ import gen_pairs
 
 def get_best(db_path, user_num, weather, pair_func, trip_func):
     trips_list, pair_list = gen_pairs.gen_pairs(db_path, user_num)
-    print(len(trips_list))
-    print(len(pair_list))
+    #print(len(trips_list))
+    #print(len(pair_list))
     max_val_trip = -1e9
     max_val_pair = -1e9
     best_trip = [-1, -1, -1]
+   
+    def trip_util(trip):
+        return trip_func(trip, weather)
+    def pair_util(pair):
+        return pair_func(pair, weather)
+
+    sort_trip = sorted(trips_list, key=trip_util)
+    sort_pair = sorted(pair_list, key=pair_util)
+    sort_trip.reverse()
+    sort_pair.reverse()
+    return sort_pair, sort_trip
+
+    #trips_list.sort(key=tripcompare)
+    #pair_list.sort(key=paircompare)
+    #return trips_list, pair_list
+
+    #print("HI")
+    """
     for trip in trips_list:
         #print(trip)
         if trip_func(trip, weather) > max_val_trip:
@@ -23,6 +41,7 @@ def get_best(db_path, user_num, weather, pair_func, trip_func):
             max_val_pair = pair_func(pair, weather)
             best_pair = pair 
     return best_trip, best_pair
+    """
 
 def util1(cloth, weather):
     return cloth[0][3] + cloth[1][3] + cloth[2][3]

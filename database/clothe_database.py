@@ -32,7 +32,7 @@ def delete_clothes(db_path):
 
 class clothe:
     #category = "casual inner", "casual outer", "formal shirt", "formal pant", "casual pant"
-    def __init__(self, category = "casual inner", r=0, g=0, b=0, length=0, image="", name = ""):
+    def __init__(self, category = 0, r=0, g=0, b=0, length=0, image="", name = ""):
         self.category = category
         self.red = r
         self.green = g

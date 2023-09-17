@@ -41,7 +41,7 @@ def get_name(clothe_id):
         return pants_match[pants.index(clothe_id)]
     return "None"
 
-def get_weather(clothes_id, weather):
+def get_weather(clothe_id, weather):
     if clothe_id in inner_top:
         if weather == "hot":
             return weather_hot_in[inner_top.index(clothe_id)]
@@ -49,14 +49,14 @@ def get_weather(clothes_id, weather):
             return weather_cold_in[inner_top.index(clothe_id)]
     if clothe_id in outer_top:
         if weather == "hot":
-            return weather_hot_out[inner_top.index(clothe_id)]
+            return weather_hot_out[outer_top.index(clothe_id)]
         if weather == "cold":
-            return weather_cold_out[inner_top.index(clothe_id)]
+            return weather_cold_out[outer_top.index(clothe_id)]
     if clothe_id in pants:
         if weather == "hot":
-            return weather_hot_bottom[inner_top.index(clothe_id)]
+            return weather_hot_bottom[pants.index(clothe_id)]
         if weather == "cold":
-            return weather_cold_bottom[inner_top.index(clothe_id)]
+            return weather_cold_bottom[pants.index(clothe_id)]
     return 100 
 
 def get_id(clothe_name):
