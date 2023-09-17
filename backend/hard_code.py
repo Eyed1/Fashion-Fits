@@ -1,132 +1,113 @@
-import clothe_database as cd
-import gen_pairs as gp
-import sqlite3
-
-def find_match(db_path):
-    triple_list, pair_list=gp.gen_pairs(db_path)
-
-    worksList=[]
+def find_match_pair(c1, c2):
 
     #DOUBLE (NO JACKET)
-    for pair in pair_list:
-        #idk names of these variables yet or how they coded
-        isFormal=False
-        colorsMatch=False
-        matchWeather=True
+    #idk names of these variables yet or how they coded
+    isFormal=False
+    colorsMatch=False
+    matchWeather=True
 
-        isMulticolor=[False,False]
+    isMulticolor=[False,False]
 
-        p=[cd.get_id(db_path,pair[0][0]),cd.get_id(db_path,pair[1][0])]
+    p=[c1,c2]
 
-        if pair[0][0]==1 or pair[0][0]==5:
-            isMulticolor[0]=True
-        if pair[1][0]==1 or pair[1][0]==5:
-            isMulticolor[1]=True
+    hsl=[rgb_to_hsl(p[0][3],p[0][4],p[0][5]),rgb_to_hsl(p[1][3],p[1][4],p[1][5])]
 
-        hsl=[rgb_to_hsl(p[0][3],p[0][4],p[0][5]),rgb_to_hsl(p[1][3],p[1][4],p[1][5])]
+    if isMulticolor[0]:
+        if isNeutral(hsl[1]) and (not isMulticolor[1]):
+            colorsMatch=True
+    elif isMulticolor[1]:
+        if isNeutral(hsl[0]) and (not isMulticolor[0]):
+            colorsMatch=True
+    elif (not isMulticolor[0]) and (not isMulticolor[1]):
+        complementaryShades=False
+        analogousMatching=False
+        triadicColor=False
+        goodNeutral=False
 
-        if isMulticolor[0]:
-            if isNeutral(hsl[1]) and (not isMulticolor[1]):
-                colorsMatch=True
-        elif isMulticolor[1]:
-            if isNeutral(hsl[0]) and (not isMulticolor[0]):
-                colorsMatch=True
-        elif (not isMulticolor[0]) and (not isMulticolor[1]):
-            complementaryShades=False
-            analogousMatching=False
-            triadicColor=False
-            goodNeutral=False
+        hueD1=hueDist(hsl[0][0],hsl[1][0])
+        satD1=satDist(hsl[0][1],hsl[1][1])
+        lightD1=lightDist(hsl[0][2],hsl[1][2])
 
-            hueD1=hueDist(hsl[0][0],hsl[1][0])
-            satD1=satDist(hsl[0][1],hsl[1][1])
-            lightD1=lightDist(hsl[0][2],hsl[1][2])
+        notClose1=(hueD1+0.6*satD1+0.6*lightD1>=42)
 
-            notClose1=(hueD1+0.6*satD1+0.6*lightD1>=42)
+        if hueD1>=160:
+            complementaryShades=True
+        if notClose1 and hueD1<=60:
+            analogousMatching=True
+        if notClose1 and (isNeutral(hsl[0]) or isNeutral(hsl[1])):
+            goodNeutral=True
 
-            if hueD1>=160:
-                complementaryShades=True
-            if notClose1 and hueD1<=60:
-                analogousMatching=True
-            if notClose1 and (isNeutral(hsl[0]) or isNeutral(hsl[1])):
-                goodNeutral=True
+        if complementaryShades or analogousMatching or triadicColor or goodNeutral:
+            colorsMatch=True
+    
+    if colorsMatch and matchWeather:
+        if isFormal:
+            if p[0]=='formal shirt' and p[1]=='formal pant':
+                return True
+        else:
+            return True
+    return False
 
-            if complementaryShades or analogousMatching or triadicColor or goodNeutral:
-                colorsMatch=True
-        
-        if colorsMatch and matchWeather:
-            if isFormal:
-                if p[0]=='formal shirt' and p[1]=='formal pant':
-                    worksList.append(pair)
-            else:
-                worksList.append(pair)
-
+def find_match_triple(c1, c2, c3):
     #TRIPLE (JACKET)
-    for triple in triple_list:
-        #idk names of these variables yet or how they coded
-        isFormal=False
-        colorsMatch=False
-        matchWeather=True
-        
-        isMulticolor=[False,False,False]
+    #idk names of these variables yet or how they coded
+    isFormal=False
+    colorsMatch=False
+    matchWeather=True
+    
+    isMulticolor=[False,False,False]
 
-        if triple[0][0]==1 or triple[0][0]==5:
-            isMulticolor[0]=True
-        if triple[1][0]==1 or triple[1][0]==5:
-            isMulticolor[1]=True
-        if triple[2][0]==1 or triple[2][0]==5:
-            isMulticolor[2]=True
+    c=[c1, c2, c3]
+    hsl=[rgb_to_hsl(c[0][3],c[0][4],c[0][5]),rgb_to_hsl(c[1][3],c[1][4],c[1][5]),rgb_to_hsl(c[2][3],c[2][4],c[2][5])]
 
-        c=[cd.get_id(db_path,triple[0][0]),cd.get_id(db_path,triple[1][0]),cd.get_id(db_path,triple[2][0])]
-        hsl=[rgb_to_hsl(c[0][3],c[0][4],c[0][5]),rgb_to_hsl(c[1][3],c[1][4],c[1][5]),rgb_to_hsl(c[2][3],c[2][4],c[2][5])]
+    if isMulticolor[0]:
+        if isNeutral(hsl[1]) and isNeutral(hsl[2]) and (not isMulticolor[1]) and (not isMulticolor[2]):
+            colorsMatch=True
+    elif isMulticolor[1]:
+        if isNeutral(hsl[0]) and isNeutral(hsl[2]) and (not isMulticolor[0]) and (not isMulticolor[2]):
+            colorsMatch=True
+    elif isMulticolor[2]:
+        if isNeutral(hsl[0]) and isNeutral(hsl[1]) and (not isMulticolor[0]) and (not isMulticolor[1]):
+            colorsMatch=True
+    elif (not isMulticolor[0]) and (not isMulticolor[1]) and (not isMulticolor[2]):
+        complementaryShades=False
+        analogousMatching=False
+        triadicColor=False
+        goodNeutral=False
 
-        if isMulticolor[0]:
-            if isNeutral(hsl[1]) and isNeutral(hsl[2]) and (not isMulticolor[1]) and (not isMulticolor[2]):
-                colorsMatch=True
-        elif isMulticolor[1]:
-            if isNeutral(hsl[0]) and isNeutral(hsl[2]) and (not isMulticolor[0]) and (not isMulticolor[2]):
-                colorsMatch=True
-        elif isMulticolor[2]:
-            if isNeutral(hsl[0]) and isNeutral(hsl[1]) and (not isMulticolor[0]) and (not isMulticolor[1]):
-                colorsMatch=True
-        elif (not isMulticolor[0]) and (not isMulticolor[1]) and (not isMulticolor[2]):
-            complementaryShades=False
-            analogousMatching=False
-            triadicColor=False
-            goodNeutral=False
+        hueD1=hueDist(hsl[0][0],hsl[1][0])
+        hueD2=hueDist(hsl[0][0],hsl[2][0])
+        hueD3=hueDist(hsl[1][0],hsl[2][0])
+        satD1=hueDist(hsl[0][1],hsl[1][1])
+        satD2=hueDist(hsl[0][1],hsl[2][1])
+        satD3=hueDist(hsl[1][1],hsl[2][1])
+        lightD1=hueDist(hsl[0][2],hsl[1][2])
+        lightD2=hueDist(hsl[0][2],hsl[2][2])
+        lightD3=hueDist(hsl[1][2],hsl[2][2])
 
-            hueD1=hueDist(hsl[0][0],hsl[1][0])
-            hueD2=hueDist(hsl[0][0],hsl[2][0])
-            hueD3=hueDist(hsl[1][0],hsl[2][0])
-            satD1=hueDist(hsl[0][1],hsl[1][1])
-            satD2=hueDist(hsl[0][1],hsl[2][1])
-            satD3=hueDist(hsl[1][1],hsl[2][1])
-            lightD1=hueDist(hsl[0][2],hsl[1][2])
-            lightD2=hueDist(hsl[0][2],hsl[2][2])
-            lightD3=hueDist(hsl[1][2],hsl[2][2])
+        notClose1=(hueD1+0.6*satD1+0.6*lightD1>=42)
+        notClose2=(hueD2+0.6*satD2+0.6*lightD2>=42)
+        notClose3=(hueD3+0.6*satD3+0.6*lightD3>=42)
 
-            notClose1=(hueD1+0.6*satD1+0.6*lightD1>=42)
-            notClose2=(hueD2+0.6*satD2+0.6*lightD2>=42)
-            notClose3=(hueD3+0.6*satD3+0.6*lightD3>=42)
+        if ((hueD2<=42 or hueD3<=42) and hueD1>=160) or ((hueD3<=42 or hueD1<=42) and hueD2>=160) or ((hueD1<=42 or hueD2<=42) and hueD3>=160):
+            complementaryShades=True
+        if (hueD1<=60 and hueD2<=60 and hueD3<=60) and (notClose1 or notClose2 or notClose3):
+            analogousMatching=True
+        if (hueD1>=120-25 and hueD1<=120+25) and (hueD2>=120-25 and hueD2<=120+25) and (hueD3>=120-25 and hueD3<=120+25):
+            triadicColor=True
+        if (notClose1 or notClose2 or notClose3) and ((isNeutral(hsl[0]) and isNeutral(hsl[1])) or (isNeutral(hsl[0]) and isNeutral(hsl[1])) or (isNeutral(hsl[0]) and isNeutral(hsl[1]))):
+            goodNeutral=True
+        if complementaryShades or analogousMatching or triadicColor or goodNeutral:
+            colorsMatch=True
 
-            if ((hueD2<=42 or hueD3<=42) and hueD1>=160) or ((hueD3<=42 or hueD1<=42) and hueD2>=160) or ((hueD1<=42 or hueD2<=42) and hueD3>=160):
-                complementaryShades=True
-            if (hueD1<=60 and hueD2<=60 and hueD3<=60) and (notClose1 or notClose2 or notClose3):
-                analogousMatching=True
-            if (hueD1>=120-25 and hueD1<=120+25) and (hueD2>=120-25 and hueD2<=120+25) and (hueD3>=120-25 and hueD3<=120+25):
-                triadicColor=True
-            if (notClose1 or notClose2 or notClose3) and ((isNeutral(hsl[0]) and isNeutral(hsl[1])) or (isNeutral(hsl[0]) and isNeutral(hsl[1])) or (isNeutral(hsl[0]) and isNeutral(hsl[1]))):
-                goodNeutral=True
-            if complementaryShades or analogousMatching or triadicColor or goodNeutral:
-                colorsMatch=True
+    if colorsMatch and matchWeather:
+        if isFormal:
+            if c[0]=='formal shirt' and c[2]=='formal pant':
+                return True
+        else:
+            return True
 
-        if colorsMatch and matchWeather:
-            if isFormal:
-                if p[0]=='formal shirt' and p[2]=='formal pant':
-                    worksList.append(triple)
-            else:
-                worksList.append(triple)
-
-    return worksList
+    return False
 
 def hueDist(h1, h2):
     return min(abs(h2-h1),abs(360+h2-h1),abs(360+h1-h2))
