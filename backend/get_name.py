@@ -12,6 +12,17 @@ pants_match = ["jeans", "pants", "shorts", "jeans", "jeans", "jeans", "jeans", "
         "male jeans", "male suit pants", "male knee-length shorts", "male swim shorts", "male sweatpants", "male track pants",
          "male sports shorts", "male pants", "male pants"]
 
+weather_hot_in = [0, 0.5, 0.5, 0, 0, 0.5, 0, 0.2, 0, 0, 0.2, 0, 0.4, 0.5]
+weather_cold_in = [0.5 - weather_hot_in[i] for i in range(len(weather_hot_in))]
+weather_hot_out = [0.4, 0.5, 0.5, 0.3, 0.4, 0.4, 0.3, 0.5, 0.4]
+weather_cold_out = [0.5 - weather_hot_out[i] for i in range(len(weather_hot_out))]
+weather_hot_bottom = [0.3, 0.4, 0, 0.3, 0.3, 0.3, 0.3, 0.4, 0.3, 0, 0.3, 0.5, 0.1, 0, 0.3, 0.2, 0, 0.4, 0.4]
+weather_cold_bottom = [0.5 - weather_hot_bottom[i] for i in range(len(weather_hot_bottom))] 
+
+#assert(len(weather_hot_in) == len(inner_top))
+#assert(len(weather_hot_out) == len(outer_top))
+#assert(len(weather_hot_bottom) == len(pants))
+
 def find_indices(arr, k):
     indices = []
     if k not in arr:
@@ -29,6 +40,24 @@ def get_name(clothe_id):
     if clothe_id in pants:
         return pants_match[pants.index(clothe_id)]
     return "None"
+
+def get_weather(clothes_id, weather):
+    if clothe_id in inner_top:
+        if weather == "hot":
+            return weather_hot_in[inner_top.index(clothe_id)]
+        if weather == "cold":
+            return weather_cold_in[inner_top.index(clothe_id)]
+    if clothe_id in outer_top:
+        if weather == "hot":
+            return weather_hot_out[inner_top.index(clothe_id)]
+        if weather == "cold":
+            return weather_cold_out[inner_top.index(clothe_id)]
+    if clothe_id in pants:
+        if weather == "hot":
+            return weather_hot_bottom[inner_top.index(clothe_id)]
+        if weather == "cold":
+            return weather_cold_bottom[inner_top.index(clothe_id)]
+    return 100 
 
 def get_id(clothe_name):
     if clothe_name in intop_match:

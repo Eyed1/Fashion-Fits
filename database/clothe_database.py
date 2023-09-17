@@ -16,7 +16,7 @@ def init_clothes(db_path):
     cmd = "CREATE TABLE IF NOT EXISTS clothes(\
     id INTEGER PRIMARY KEY AUTOINCREMENT,\
     user USER,\
-    type varchar(255),\
+    type INTEGER,\
     red INTEGER,\
     green INTEGER,\
     blue INTEGER,\

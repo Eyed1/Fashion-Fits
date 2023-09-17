@@ -4,7 +4,7 @@ sys.path.append("../database")
 import clothe_database as cd
 import gen_pairs
 
-def get_best(db_path, user_num, weather, trip_func, pair_func):
+def get_best(db_path, user_num, weather, pair_func, trip_func):
     trips_list, pair_list = gen_pairs.gen_pairs(db_path, user_num)
     print(len(trips_list))
     print(len(pair_list))
@@ -30,9 +30,9 @@ def util1(cloth, weather):
 def util2(cloth, weather):
     return cloth[0][3]+ cloth[1][3]
 
-db_path = os.getcwd() + "/../database/fashion.db"
-a, b= get_best(db_path, -1, 0, util1, util2)
-print(a)
-print(b)
+#db_path = os.getcwd() + "/../database/fashion.db"
+#a, b= get_best(db_path, -1, 0, util1, util2)
+#print(a)
+#print(b)
 
   
