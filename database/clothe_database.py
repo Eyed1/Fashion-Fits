@@ -15,12 +15,14 @@ def run_cmd(db_path, command, params = ()):
 def init_clothes(db_path):
     cmd = "CREATE TABLE IF NOT EXISTS clothes(\
     id INTEGER PRIMARY KEY AUTOINCREMENT,\
+    user USER,\
     type varchar(255),\
     red INTEGER,\
     green INTEGER,\
     blue INTEGER,\
     length INTEGER,\
-    image varchar(255)\
+    image varchar(255),\
+    name varcharr(255)\
     )"
     run_cmd(db_path, cmd)
 
@@ -30,40 +32,44 @@ def delete_clothes(db_path):
 
 class clothe:
     #category = "casual inner", "casual outer", "formal shirt", "formal pant", "casual pant"
-    def __init__(self, category = "casual inner", r=0, g=0, b=0, length=0, image=""):
+    def __init__(self, category = "casual inner", r=0, g=0, b=0, length=0, image="", name = ""):
         self.category = category
         self.red = r
         self.green = g
         self.blue = b
         self.length = length
         self.image = image 
+        self.name = name
 
-def add_clothes(db_path, clothes):
-    cmd = f"INSERT INTO clothes (type, red, green, blue, length, image) VALUES (?, ?, ?, ?, ?, ?)"
-    run_cmd(db_path, cmd, (clothes.category, clothes.red, clothes.green, clothes.blue, clothes.length, clothes.image,))
+def add_clothes(db_path, clothes, user = -1):
+    cmd = f"INSERT INTO clothes (user, type, red, green, blue, length, image, name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    run_cmd(db_path, cmd, (user, clothes.category, clothes.red, clothes.green, clothes.blue, clothes.length, clothes.image, clothes.name))
 
-def add_inventory(db_path, inventory):
+def add_inventory(db_path, inventory, user = -1):
     for clothe in inventory:
-        add_clothes(db_path, clothe)
+        add_clothes(db_path, clothe, user)
 
-def get_clothes(db_path):
-    return run_cmd(db_path, "SELECT * FROM clothes")
+#Get clothes of one user
+def get_clothes(db_path, user = -1):
+    return run_cmd(db_path, "SELECT * FROM clothes WHERE clothes.user = ?", (user,))
 
-def get_category(db_path, category):
-    cmd = f"SELECT * FROM clothes WHERE clothes.type = ?"
-    return run_cmd(db_path, cmd, (category,))
+#Get clothes of a certain type of a category
+def get_category(db_path, category, user=-1):
+    cmd = f"SELECT * FROM clothes WHERE clothes.type = ? AND clothes.user = ?"
+    return run_cmd(db_path, cmd, (category, user,))
 
+#Get clothe given id
 def get_id(db_path, num):
-    cmd = f"SELECT * FROM clothes WHERE clothes.id = ?"
-    res = run_cmd(db_path, cmd, (num,))
+    res = run_cmd(db_path, "SELECT * FROM clothes WHERE clothes.id = ?", (num,))
     if len(res) == 0:
         return None
     return res[0]
 
+#get image. Run img.show() to show image.
 def get_img(db_path, num):
     cloth = get_id(db_path, num)
-    link = cloth[6]
+    link = cloth[7]
     urllib.request.urlretrieve(link, "img.png")
-    img = Image.open("pant.png")
+    img = Image.open("img.png")
     return link, img
 
