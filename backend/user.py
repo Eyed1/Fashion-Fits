@@ -10,12 +10,12 @@ import clothe_database as cd
 db_path = "../database/fashion.db"
 
 def get_clothes(user_num):
-    return cd.get_clothes(db_path, user_num = -1)
+    return cd.get_clothes(db_path, user_num)
 
 def add_clothes(clothe, user_num):
-    cd.add_clothes(db_path, clothe, user_num = -1)
+    cd.add_clothes(db_path, clothe, user_num)
 
-def add_inventory(inventory, user_num = -1):
+def add_inventory(inventory, user_num):
     cd.add_clothes(db_path, inventory, user_num)
 
 def pair_func(cloth, weather):
