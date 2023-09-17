@@ -10,7 +10,7 @@ import { useWardropeStore } from '../stores/wardropeStore';
 const wardropeStore = useWardropeStore()
 
 const clothe = ref({
-    color: '',
+    color: '#000000',
     type: '',
     category: '',
     imgLink: ''
@@ -22,6 +22,7 @@ const typeList = computed(() => {
 
 const makeClothe = () => {
     wardropeStore.addClothe(clothe.value)
+    wardropeStore.getWardrope()
 }
 
 </script>
@@ -30,12 +31,12 @@ const makeClothe = () => {
 <form @submit="makeClothe">
     <h3>What type of clothing do you want to add?</h3>
     <div id="category">
-        <ClotheCard class="item" @click="clothe.category='top'" :imgLink="avatarMap['top']" text="Tops" :widthStr="'100px'" :class="{ selected:(clothe.category==='top') }"/>
-        <ClotheCard class="item" @click="clothe.category='bottom'" :imgLink="avatarMap['bottom']" text="Bottoms" :widthStr="'100px'" :class="{ selected:(clothe.category==='bottom') }"/>
-        <ClotheCard class="item" @click="clothe.category='outerwear'" :imgLink="avatarMap['outerwear']" text="Outerwear" :widthStr="'100px'" :class="{ selected:(clothe.category==='outerwear') }"/>
+        <ClotheCard class="item" @click="clothe.category='top'" :imgLink="avatarMap['top']" :color="clothe.color" text="Tops" :widthStr="'100px'" :class="{ selected:(clothe.category==='top') }"/>
+        <ClotheCard class="item" @click="clothe.category='bottom'" :imgLink="avatarMap['bottom']" :color="clothe.color" text="Bottoms" :widthStr="'100px'" :class="{ selected:(clothe.category==='bottom') }"/>
+        <ClotheCard class="item" @click="clothe.category='outerwear'" :imgLink="avatarMap['outerwear']" :color="clothe.color" text="Outerwear" :widthStr="'100px'" :class="{ selected:(clothe.category==='outerwear') }"/>
     </div>
     <div id="type">
-        <ClotheCard class="item" v-for="type in typeList" :key="type" :imgLink="avatarMap[type]" :text="type" :widthStr="'100px'" @click="clothe.type=type" :class="{ selected:(clothe.type===type) }"/>
+        <ClotheCard class="item" v-for="type in typeList" :key="type" :imgLink="avatarMap[type]" :color="clothe.color" :text="type" :widthStr="'100px'" @click="clothe.type=type" :class="{ selected:(clothe.type===type) }"/>
     </div>
     <div id="colormeter">
         <p>Select a Color:</p>

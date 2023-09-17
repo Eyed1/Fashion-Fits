@@ -48,7 +48,7 @@ const openCreateClothe = () => {
     </nav>
   </header>
   <main>
-    <ClotheCard v-for="clothe in clothes.value" :key="clothe.id" :imgLink="clothe.imgLink" :text="`${clothe.color} ${clothe.type}`" @click="popupEdit(clothe)"/> 
+    <ClotheCard v-for="clothe in clothes.value" :key="clothe.id" :imgLink="clothe.imgLink" :text="`${clothe.type}`" @click="popupEdit(clothe)"/> 
   </main>
   <button id="addButton" @click="openCreateClothe">+</button>
   <ClotheEditPopup v-if="showEdit" :clothe="popupClothe" @close="finishEdit"/>

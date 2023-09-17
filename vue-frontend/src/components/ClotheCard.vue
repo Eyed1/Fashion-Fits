@@ -13,11 +13,15 @@ const props = defineProps({
         type: String,
         default: '250px'
     },
+    color: {
+        type: String,
+        default: '#000000'
+    }
 })
 </script>
 
 <template>
-    <div class="box" :style="{ width: widthStr }">
+    <div class="box" :style="{ width: widthStr, color: color }">
         <img :src="imgLink">
         <p>{{ text }}</p>
     </div>
