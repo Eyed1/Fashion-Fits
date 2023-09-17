@@ -35,7 +35,7 @@ class WardropeService {
   }
 }
 
-
+/*
 class WardropeService {
   async getWardrope() {
     const response = await axios.get(baseUrl);
@@ -57,6 +57,6 @@ class WardropeService {
     return response.data;
   }
 }
-
+*/
 
 export { WardropeService };
