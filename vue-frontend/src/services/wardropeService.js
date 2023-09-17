@@ -35,7 +35,7 @@ class WardropeService {
   }
 }
 
-/*
+
 class WardropeService {
   async getWardrope() {
     const response = await axios.get(baseUrl);
@@ -56,12 +56,7 @@ class WardropeService {
     const response = await axios.delete(`${baseUrl}/${clothe.id}`);
     return response.data;
   }
-
-  async editClothe(clothe) {
-    const response = await axios.put(`${baseUrl}/${clothe.id}`, clothe);
-    return response.data;
-  }
 }
-*/
+
 
 export { WardropeService };

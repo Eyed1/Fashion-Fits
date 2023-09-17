@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useWardropeStore } from '../stores/wardropeStore'
 import ClotheCard from '../components/ClotheCard.vue'
 import ClotheEditPopup from '../components/ClotheEditPopup.vue'
+import ClotheCreatePopup from '../components/ClotheCreatePopup.vue';
 
 const category = ref('top')
 const wardropeStore = useWardropeStore()
@@ -11,18 +12,27 @@ const clothes = computed(() => {
   return wardropeStore.getClothesByCategory(category.value)
 })
 console.log(clothes.value)
-const showPopup = ref(false)
+const showEdit = ref(false)
+const showCreate = ref(false)
 const popupClothe = ref({})
 
 const popupEdit = (clothe) => {
   console.log(clothe)
-  showPopup.value = true
+  showEdit.value = true
   popupClothe.value = clothe
 }
 
-const finishEdit = (clothe) => {
-  showPopup.value = false
+const finishEdit = (clothe, remove) => {
+  showEdit.value = false
+  if (remove) {
+    wardropeStore.deleteClothe(clothe)
+    return
+  }
   wardropeStore.updateClothe(clothe)
+}
+
+const openCreateClothe = () => {
+  showCreate.value = true
 }
 
 </script>
@@ -38,13 +48,15 @@ const finishEdit = (clothe) => {
     </nav>
   </header>
   <main>
-    <ClotheCard v-for="clothe in clothes.value" :key="clothe.id" :clothe="clothe" @click="popupEdit(clothe)"/> 
+    <ClotheCard v-for="clothe in clothes.value" :key="clothe.id" :imgLink="clothe.imgLink" :text="`${clothe.color} ${clothe.type}`" @click="popupEdit(clothe)"/> 
   </main>
-  <ClotheEditPopup v-if="showPopup" :clothe="popupClothe" @close="finishEdit"/>
+  <button id="addButton" @click="openCreateClothe">+</button>
+  <ClotheEditPopup v-if="showEdit" :clothe="popupClothe" @close="finishEdit"/>
+  <ClotheCreatePopup v-if="showCreate" @close="showCreate=false"/>
   </div>
 </template>
 
-<style>
+<style scoped>
 nav{
   display: flex;
   flex-wrap: nowrap;
@@ -61,5 +73,24 @@ main{
 .nav-item{
   padding: 20px;
   cursor: pointer;
+}
+
+#addButton{
+  position: fixed;
+  bottom: 7vh;
+  right: 0;
+  transform: translate(-20px, -20px);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: rgb(150, 255, 150);
+  color: green;
+}
+#addButton:hover{
+  background-color: rgb(100, 255, 100);
 }
 </style>

@@ -1,23 +1,30 @@
 <script setup>
 import { defineProps } from 'vue'
 const props = defineProps({
-    clothe: {
-        type: Object,
+    imgLink: {
+        type: String,
         required: true
-    }
+    },
+    text: {
+        type: String,
+        required: true
+    },
+    widthStr: {
+        type: String,
+        default: '250px'
+    },
 })
 </script>
 
 <template>
-    <div class="box">
-        <img :src="clothe.imgLink">
-        <p>{{ `${clothe.color} ${clothe.type}` }}</p>
+    <div class="box" :style="{ width: widthStr }">
+        <img :src="imgLink">
+        <p>{{ text }}</p>
     </div>
 </template>
 
 <style scoped>
 .box{
-    width: 250px;
     background-color: rgb(250, 250, 250);
     border: 0.2px solid black;
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
