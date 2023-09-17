@@ -15,6 +15,9 @@ def get_clothes(user_num):
 def add_clothes(clothe, user_num):
     cd.add_clothes(db_path, clothe, user_num)
 
+def del_clothes(id_num):
+    cd.delete_clothe(db_path, id_num)
+
 def add_inventory(inventory, user_num):
     cd.add_clothes(db_path, inventory, user_num)
 

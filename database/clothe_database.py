@@ -45,6 +45,10 @@ def add_clothes(db_path, clothes, user = -1):
     cmd = f"INSERT INTO clothes (user, type, red, green, blue, length, image, name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     run_cmd(db_path, cmd, (user, clothes.category, clothes.red, clothes.green, clothes.blue, clothes.length, clothes.image, clothes.name))
 
+def delete_clothe(db_path, id_num, user  = -1):
+    cmd = f"DELETE FROM clothes WHERE id = ?"
+    run_cmd(db_path, cmd, (id_num))
+
 def add_inventory(db_path, inventory, user = -1):
     for clothe in inventory:
         add_clothes(db_path, clothe, user)
